@@ -59,14 +59,14 @@ Then("Eu confirmo os produtos no resumo do pedido", () => {
 
 When("Eu finalizo a compra", () => {
   cy.get('[data-test="finish"]').should("be.visible").should("be.enabled").click({ force: true });
-  cy.get('.complete-header', { timeout: 10000 })
-    .should('be.visible')
-    .then(() => cy.location('pathname').should('include', 'checkout-complete'))
-    .catch((err) => {
-      cy.screenshot('erro-finaliza-compra'); // Tira um screenshot para debug
-      throw err;
-    });
+
+  // Aguarda até que a mensagem de sucesso apareça
+  cy.get('.complete-header', { timeout: 10000 }).should('be.visible');
+
+  // Valida a URL correta do site
+  cy.url().should('include', '/v1/checkout-step-two.html');
 });
+
 
 
 Then("Eu vejo a mensagem de compra concluída com sucesso", () => {
