@@ -1,4 +1,4 @@
-# Cypress + Cucumber
+# Testes Automatizados com Cypress + Cucumber
 
 Este repositório contém testes automatizados utilizando **Cypress** com **Cucumber** para escrita dos cenários de teste.
 
