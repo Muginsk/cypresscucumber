@@ -61,11 +61,16 @@ When("Eu finalizo a compra", () => {
   cy.get('[data-test="finish"]').should("be.visible").should("be.enabled").click({ force: true });
 
   // Aguarda até que a mensagem de sucesso apareça
-  cy.get('.complete-header', { timeout: 10000 }).should('be.visible');
+  cy.get('.complete-header', { timeout: 10000 }).should('be.visible')
+    .and('contain', 'Thank you for your order!');
 
-  // Valida a URL correta do site
-  cy.url().should('include', '/v1/checkout-step-two.html');
+  // Verifica se o botão "Back Home" está visível (exclusivo dessa tela)
+  cy.get('[data-test="back-to-products"]').should("be.visible");
+
+  // Confirma que o carrinho agora está vazio
+  cy.get('.shopping_cart_badge').should('not.exist');
 });
+
 
 
 
