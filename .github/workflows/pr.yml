@@ -1,5 +1,4 @@
 name: pr
-
 on:
   push:
     branches:
@@ -21,14 +20,14 @@ jobs:
         with:
           node-version: 18
 
+      - name: Dar permissão para o diretório de trabalho
+        run: chmod -R 777 .
+
       - name: Instalar dependências
-        run: npm ci  # Usa 'ci' para garantir instalações limpas e confiáveis
+        run: npm ci  
 
-      - name: Dar permissão para Cypress
-        run: chmod +x node_modules/.bin/cypress
-
-      - name: Instalar Cypress manualmente
-        run: node_modules/.bin/cypress install
+      - name: Instalar Cypress
+        run: npx cypress install || ./node_modules/.bin/cypress install
 
       - name: Executar testes Cypress
-        run: node_modules/.bin/cypress run
+        run: npx cypress run || ./node_modules/.bin/cypress run
