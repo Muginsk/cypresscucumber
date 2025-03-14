@@ -22,13 +22,13 @@ jobs:
           node-version: 18
 
       - name: Instalar dependências
-        run: npm install
+        run: npm ci  # Usa 'ci' para garantir instalações limpas e confiáveis
 
-      - name: Instalar Cypress
-        run: npx cypress install
-
-      - name: Corrigir permissões
+      - name: Dar permissão para Cypress
         run: chmod +x node_modules/.bin/cypress
 
-      - name: Executar testes Cypress com Cucumber
-        run: npx cypress run
+      - name: Instalar Cypress manualmente
+        run: node_modules/.bin/cypress install
+
+      - name: Executar testes Cypress
+        run: node_modules/.bin/cypress run
