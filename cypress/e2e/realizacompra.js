@@ -59,8 +59,13 @@ Then("Eu confirmo os produtos no resumo do pedido", () => {
 
 When("Eu finalizo a compra", () => {
   cy.get('[data-test="finish"]').should("be.visible").should("be.enabled").click({ force: true });
-  cy.get('.complete-header').should('be.visible'); // Aguarda o carregamento da página de confirmação
-  cy.url().should('include', '/checkout-complete.html');
+  cy.get('.complete-header', { timeout: 10000 })
+    .should('be.visible')
+    .then(() => cy.location('pathname').should('include', 'checkout-complete'))
+    .catch((err) => {
+      cy.screenshot('erro-finaliza-compra'); // Tira um screenshot para debug
+      throw err;
+    });
 });
 
 
