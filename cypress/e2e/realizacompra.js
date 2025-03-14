@@ -1,14 +1,14 @@
 import { Given, When, Then } from "@badeball/cypress-cucumber-preprocessor";
 
 Given("Estou na pagina de login", () => {
-  cy.visit("https://www.saucedemo.com/"); // Ajuste a URL conforme necessário
+  cy.visit("https://www.saucedemo.com/");
   cy.get('[data-test="username"]').should("be.visible"); // Aguarda o campo de usuário estar visível
 });
 
 When("Eu insiro o usuário e a senha", () => {
   cy.get('[data-test="username"]').type('standard_user');
   cy.get('[data-test="password"]').type('secret_sauce');
-  cy.get('#login-button').click();
+  cy.get('#login-button').should("be.visible").click(); // Garante que o botão esteja visível antes do clique
   cy.get('.title').should('be.visible'); // Aguarda a página de produtos carregar
 });
 
@@ -58,7 +58,7 @@ Then("Eu confirmo os produtos no resumo do pedido", () => {
 });
 
 When("Eu finalizo a compra", () => {
-  cy.get('[data-test="finish"]').should("be.visible").click();
+  cy.get('[data-test="finish"]').should("be.visible").click(); // Confirma que o botão está visível antes do clique
   cy.url().should('include', '/checkout-complete.html');
 });
 
