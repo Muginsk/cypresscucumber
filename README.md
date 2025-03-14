@@ -49,6 +49,7 @@ Para executar os testes, utilize um dos seguintes comandos:
 ## 📝 Estrutura do Projeto
 
 ```
+├── .github/workflows/       # Configurações do GitHub Actions
 ├── cypress/
 │   ├── e2e/                # Arquivos de testes
 │   ├── fixtures/           # Dados simulados
@@ -57,7 +58,9 @@ Para executar os testes, utilize um dos seguintes comandos:
 │   ├── videos/             # Gravações das execuções dos testes
 ├── cypress.config.js       # Configuração do Cypress
 ├── package.json            # Dependências do projeto
-└── README.md               # Documentação do projeto
+├── .gitignore              # Arquivos ignorados pelo Git
+├── README.md               # Documentação do projeto
+└── .github/workflows/ci.yml # Pipeline de execução automática com GitHub Actions
 ```
 
 ## 📸 Capturas de Tela & Vídeos
@@ -88,6 +91,55 @@ Para gerar relatórios formatados, siga os passos abaixo:
 
 O relatório será gerado na pasta `mochawesome-report/` e pode ser aberto no navegador.
 
+## ⚙️ Integração com GitHub Actions
+
+Este repositório possui uma pipeline de execução automatizada utilizando **GitHub Actions**. A cada novo commit na branch principal, os testes são executados automaticamente.
+
+### Configuração do GitHub Actions
+
+O workflow está localizado em `.github/workflows/ci.yml` e segue esta estrutura:
+
+```yaml
+name: Cypress Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v3
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Executar testes
+        run: npx cypress run
+
+      - name: Salvar screenshots e vídeos
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress-artifacts
+          path: cypress/screenshots/
+          retention-days: 5
+```
+
+### Acompanhando Execuções
+
+Para visualizar os resultados das execuções:
+
+1. Acesse o repositório no GitHub.
+2. Clique em **Actions**.
+3. Selecione o workflow desejado para ver logs e artefatos gerados (screenshots e vídeos de falhas).
+
 ## ✨ Dicas Extras
 
 - Caso tenha problemas com caminhos de arquivos, tente rodar:
@@ -96,5 +148,7 @@ O relatório será gerado na pasta `mochawesome-report/` e pode ser aberto no na
   ```
 - Se os testes não encontrarem os elementos corretos, utilize `cy.wait(ms)` para aguardar carregamentos assíncronos.
 
+---
 
+Com esse README, seu repositório está bem documentado, facilitando o entendimento e execução dos testes! 🚀
 
