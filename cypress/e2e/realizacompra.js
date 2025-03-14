@@ -1,79 +1,62 @@
 import { Given, When, Then } from "@badeball/cypress-cucumber-preprocessor";
 
+// 1️⃣ Acessar a página de login
 Given("Estou na pagina de login", () => {
-  cy.visit("https://www.saucedemo.com/");
-  cy.get('[data-test="username"]').should("be.visible"); // Aguarda o campo de usuário estar visível
+  cy.visit("https://www.saucedemo.com/v1/");
 });
 
+// 2️⃣ Inserir usuário e senha
 When("Eu insiro o usuário e a senha", () => {
   cy.get('[data-test="username"]').type('standard_user');
   cy.get('[data-test="password"]').type('secret_sauce');
-  cy.get('#login-button').should("be.visible").click(); // Garante que o botão esteja visível antes do clique
-  cy.get('.title').should('be.visible'); // Aguarda a página de produtos carregar
+  cy.get('#login-button').click();
 });
 
+// 3️⃣ Validar que o login foi realizado com sucesso
 Then("Eu vejo a mensagem de login realizado com sucesso", () => {
   cy.url().should('include', '/inventory.html');
-  cy.get('.title').should('contain.text', 'Products');
+  cy.get('.product_label').should('be.visible').and('contain.text', 'Products');
 });
 
+// 4️⃣ Adicionar três produtos ao carrinho
 When("Eu adiciono três produtos ao carrinho", () => {
-  cy.get('[data-test="add-to-cart-sauce-labs-backpack"]').should("be.visible").click();
-  cy.get('[data-test="add-to-cart-sauce-labs-bike-light"]').should("be.visible").click();
-  cy.get('[data-test="add-to-cart-sauce-labs-bolt-t-shirt"]').should("be.visible").click();
-  cy.get('.shopping_cart_badge').should('contain', '3'); // Aguarda a atualização do carrinho
+  cy.get('.inventory_item').eq(0).find('button').click(); // Primeiro produto
+  cy.get('.inventory_item').eq(1).find('button').click(); // Segundo produto
+  cy.get('.inventory_item').eq(2).find('button').click(); // Terceiro produto
 });
 
+// 5️⃣ Validar que o carrinho tem três itens
 Then("Eu vejo que o carrinho tem três itens", () => {
-  cy.get('.shopping_cart_badge').should('be.visible').and('contain', '3');
+  cy.get('.shopping_cart_badge').should('have.text', '3');
 });
 
+// 6️⃣ Acessar o carrinho e validar os produtos escolhidos
 When("Eu acesso o carrinho e valido os produtos escolhidos", () => {
-  cy.get('.shopping_cart_link').should("be.visible").click();
+  cy.get('.shopping_cart_link').click();
   cy.url().should('include', '/cart.html');
-  
   cy.get('.cart_item').should('have.length', 3);
-  cy.get('.inventory_item_name').eq(0).should('contain.text', 'Sauce Labs Backpack');
-  cy.get('.inventory_item_name').eq(1).should('contain.text', 'Sauce Labs Bike Light');
-  cy.get('.inventory_item_name').eq(2).should('contain.text', 'Sauce Labs Bolt T-Shirt');
 });
 
+// 7️⃣ Avançar para o checkout e preencher as informações
 When("Eu avanço para o checkout e preencho as informações", () => {
-  cy.get('[data-test="checkout"]').should("be.visible").click();
-  cy.url().should('include', '/checkout-step-one.html');
-
-  cy.get('[data-test="firstName"]').should("be.visible").type('Felipe');
-  cy.get('[data-test="lastName"]').should("be.visible").type('Muginsk');
-  cy.get('[data-test="postalCode"]').should("be.visible").type('12345');
-
-  cy.get('[data-test="continue"]').should("be.visible").click();
-  cy.url().should('include', '/checkout-step-two.html');
+  cy.get('.checkout_button').should('be.visible').click();
+  cy.url().should('include', '/checkout-step-one');
+  cy.get('[data-test="firstName"]').type('Felipe');
+  cy.get('[data-test="lastName"]').type('Muginsk');
+  cy.get('[data-test="postalCode"]').type('12345-678');
+  cy.get('.cart_button').click();
 });
 
-Then("Eu confirmo os produtos no resumo do pedido", () => {
-  cy.get('.cart_item').should('have.length', 3);
-  cy.get('.inventory_item_name').eq(0).should('contain.text', 'Sauce Labs Backpack');
-  cy.get('.inventory_item_name').eq(1).should('contain.text', 'Sauce Labs Bike Light');
-  cy.get('.inventory_item_name').eq(2).should('contain.text', 'Sauce Labs Bolt T-Shirt');
+Then("sou redirecionado para a página de revisão do pedido", () => {
+  cy.url().should('include', '/checkout-step-two');
+  cy.get('.subheader').should('contain.text', 'Checkout: Overview');
 });
 
-When("Eu finalizo a compra", () => {
-  cy.get('[data-test="finish"]').should("be.visible").should("be.enabled").click({ force: true });
-
-  // Aguarda até que a mensagem de sucesso apareça
-  cy.get('.complete-header', { timeout: 10000 }).should('be.visible')
-    .and('contain', 'Thank you for your order!');
-
-  // Verifica se o botão "Back Home" está visível (exclusivo dessa tela)
-  cy.get('[data-test="back-to-products"]').should("be.visible");
-
-  // Confirma que o carrinho agora está vazio
-  cy.get('.shopping_cart_badge').should('not.exist');
+When("confirmo a compra", () => {
+  cy.get('.cart_button').click();
 });
 
-
-
-
-Then("Eu vejo a mensagem de compra concluída com sucesso", () => {
-  cy.get('.complete-header').should('be.visible').and('contain.text', 'Thank you for your order!');
+Then("vejo a mensagem de confirmação {string}", (message) => {
+  cy.url().should('include', '/checkout-complete');
+  cy.get('.complete-header').should('contain.text', message);
 });

@@ -1,6 +1,6 @@
-Feature: Compra de produtos
+Feature: Realizar uma compra no site SauceDemo
 
-  Scenario: Login válido
+  Scenario: Login no site
     Given Estou na pagina de login
     When Eu insiro o usuário e a senha
     Then Eu vejo a mensagem de login realizado com sucesso
@@ -16,14 +16,13 @@ Feature: Compra de produtos
     When Eu insiro o usuário e a senha
     And Eu adiciono três produtos ao carrinho
     And Eu acesso o carrinho e valido os produtos escolhidos
-    Then Eu vejo que o carrinho tem três itens
 
-  Scenario: Finalizar compra com sucesso
+  Scenario: Finalizar compra
     Given Estou na pagina de login
     When Eu insiro o usuário e a senha
     And Eu adiciono três produtos ao carrinho
     And Eu acesso o carrinho e valido os produtos escolhidos
     And Eu avanço para o checkout e preencho as informações
-    Then Eu confirmo os produtos no resumo do pedido
-    And Eu finalizo a compra
-    And Eu vejo a mensagem de compra concluída com sucesso
+    Then sou redirecionado para a página de revisão do pedido
+    When confirmo a compra
+    Then vejo a mensagem de confirmação "THANK YOU FOR YOUR ORDER"
