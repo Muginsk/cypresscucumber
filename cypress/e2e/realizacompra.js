@@ -58,9 +58,11 @@ Then("Eu confirmo os produtos no resumo do pedido", () => {
 });
 
 When("Eu finalizo a compra", () => {
-  cy.get('[data-test="finish"]').should("be.visible").should("be.enabled").click({ force: true }); // Confirma que o botão está visível antes do clique
+  cy.get('[data-test="finish"]').should("be.visible").should("be.enabled").click({ force: true });
+  cy.get('.complete-header').should('be.visible'); // Aguarda o carregamento da página de confirmação
   cy.url().should('include', '/checkout-complete.html');
 });
+
 
 Then("Eu vejo a mensagem de compra concluída com sucesso", () => {
   cy.get('.complete-header').should('be.visible').and('contain.text', 'Thank you for your order!');
