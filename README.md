@@ -19,7 +19,7 @@ Para rodar os testes, siga os passos abaixo:
    npm install
    ```
 
-## 🌿 Executando os Testes
+## ▶️ Executando os Testes
 
 Para executar os testes, utilize um dos seguintes comandos:
 
@@ -96,14 +96,5 @@ O relatório será gerado na pasta `mochawesome-report/` e pode ser aberto no na
   ```
 - Se os testes não encontrarem os elementos corretos, utilize `cy.wait(ms)` para aguardar carregamentos assíncronos.
 
-## 🎉 Contribuindo
 
-1. Faça um **fork** do repositório
-2. Crie uma **branch** para sua modificação (`git checkout -b feature-nova`)
-3. Faça **commit** das suas alterações (`git commit -m 'Adicionando nova feature'`)
-4. Faça **push** da sua branch (`git push origin feature-nova`)
-5. Abra um **Pull Request**
-
----
-**Desenvolvido por Felipe Almeida Muginsk** 🚀
 
