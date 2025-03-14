@@ -58,7 +58,7 @@ Then("Eu confirmo os produtos no resumo do pedido", () => {
 });
 
 When("Eu finalizo a compra", () => {
-  cy.get('[data-test="finish"]').should("be.visible").click(); // Confirma que o botão está visível antes do clique
+  cy.get('[data-test="finish"]').should("be.visible").should("be.enabled").click({ force: true }); // Confirma que o botão está visível antes do clique
   cy.url().should('include', '/checkout-complete.html');
 });
 
